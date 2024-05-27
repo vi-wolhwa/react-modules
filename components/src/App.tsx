@@ -9,7 +9,6 @@ function App() {
   const openModal = () => setIsOpen(true);
 
   return (
-<<<<<<< HEAD
     <>
       <h1 style={{ marginBottom: '20px' }}>Component Modules</h1>
       <button type='button' onClick={openModal}>
@@ -32,9 +31,6 @@ function App() {
         onOpen={() => console.log('onOpen')}
       ></Modal>
     </>
-=======
-    <h1 style={{ marginBottom: '20px' }}>Hooks Module</h1>
->>>>>>> 332758f39db0dc6980f7af9d0d5d84bb3fd0bc52
   );
 }
 
