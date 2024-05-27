@@ -1,3 +1,4 @@
+// Modal.tsx
 import { FormEvent, ReactNode, useLayoutEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
@@ -29,6 +30,9 @@ interface ModalProps {
   confirmLabel?: string;
   cancelLabel?: string; // Only for confirm, prompt type
   onConfirm?: (formValues: Record<string, string>) => void;
+  onOpen?: () => void;
+  onCancel?: () => void;
+  onClose?: () => void;
 
   portalNodeId?: string;
   children?: ReactNode;
@@ -46,6 +50,9 @@ const Modal: React.FC<ModalProps> = ({
   confirmLabel = '확인',
   cancelLabel = '취소',
   onConfirm = () => {},
+  onOpen = () => {},
+  onCancel = () => {},
+  onClose = () => {},
   portalNodeId = '',
   children,
 }) => {
@@ -54,7 +61,15 @@ const Modal: React.FC<ModalProps> = ({
   const willRenderCancelButton = ['confirm', 'prompt'].includes(type);
   const willRenderConfirmButton = ['confirm', 'prompt', 'alert'].includes(type);
 
-  const handleClose = () => setIsOpen(false);
+  const handleClose = () => {
+    setIsOpen(false);
+    onClose();
+  };
+
+  const handleCancel = () => {
+    onCancel();
+    handleClose();
+  };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -81,12 +96,19 @@ const Modal: React.FC<ModalProps> = ({
     };
   }, []);
 
+  /* Open Modal */
+  useLayoutEffect(() => {
+    if (isOpen) {
+      onOpen();
+    }
+  }, [isOpen, onOpen]);
+
   /* Close 'Modal'' */
   if (!isOpen || !$portal) return null;
 
   /* Open 'Modal'' */
   return ReactDOM.createPortal(
-    <div className={styles.overlay} onClick={handleClose}>
+    <div className={styles.overlay} onClick={handleCancel}>
       <form
         className={`${styles.content} ${styles[size]} ${styles[position]}`}
         onClick={(e) => e.stopPropagation()}
@@ -107,7 +129,7 @@ const Modal: React.FC<ModalProps> = ({
         {(willRenderConfirmButton || willRenderCancelButton) && (
           <div className={styles.buttonWrapper}>
             {willRenderCancelButton && (
-              <button type='button' className={styles.cancelButton} onClick={handleClose}>
+              <button type='button' className={styles.cancelButton} onClick={handleCancel}>
                 {cancelLabel}
               </button>
             )}

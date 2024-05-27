@@ -5,15 +5,9 @@ import { Modal } from 'vwh-wtc-lv2-payments-modal';
 // import Modal from './lib/Modal';
 
 function App() {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
-
-  const onConfirm = (formValues: Record<string, string>) => {
-    Object.entries(formValues).forEach(([key, value]) => {
-      console.log(key + ' : ' + value);
-    });
-  };
 
   return (
     <>
@@ -32,7 +26,10 @@ function App() {
         placeholder='Enter Text'
         confirmLabel='Confirm'
         cancelLabel='Cancel'
-        onConfirm={onConfirm}
+        onConfirm={() => console.log('onConfirm')}
+        onCancel={() => console.log('onCancel')}
+        onClose={() => console.log('onClose')}
+        onOpen={() => console.log('onOpen')}
       ></Modal>
     </>
   );
